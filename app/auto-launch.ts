@@ -1,12 +1,13 @@
-import { app } from 'electron';
-const { localStorage } = require('electron-browser-storage');
+import { BrowserWindow, app } from 'electron';
 const path = require('path');
 
 export default class AutoLaunch {
   private appFolder: string | undefined;
   private appExe: string | undefined;
+  private winRef: BrowserWindow | null = null;
 
-  constructor() {
+  constructor(winRef: BrowserWindow) {
+    this.winRef = winRef;
     this.appFolder = path.dirname(process.execPath);
     this.appExe = path.resolve(this.appFolder, '..', `${app.getName()}.exe`);
   }
@@ -41,7 +42,9 @@ export default class AutoLaunch {
   }
 
   async clearLocalStorageAndQuit(): Promise<void> {
-    await localStorage.clear();
-    app.quit();
+    if (this.winRef) {
+      this.winRef.webContents.executeJavaScript(`window.localStorage.clear();`);
+      app.quit();
+    }
   }
 }

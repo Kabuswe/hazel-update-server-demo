@@ -10,28 +10,30 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const electron_1 = require("electron");
-const { localStorage } = require('electron-browser-storage');
 const path = require('path');
 class AutoLaunch {
-    constructor() {
+    constructor(winRef) {
+        this.winRef = null;
+        this.winRef = winRef;
         this.appFolder = path.dirname(process.execPath);
         this.appExe = path.resolve(this.appFolder, '..', `${electron_1.app.getName()}.exe`);
     }
     init() {
-        var _a, _b;
+        var _a;
         // Set auto-launch settings if not set
-        console.log((_a = electron_1.app.getLoginItemSettings()) === null || _a === void 0 ? void 0 : _a.openAtLogin);
-        if (!((_b = electron_1.app.getLoginItemSettings()) === null || _b === void 0 ? void 0 : _b.openAtLogin)) {
+        if (!((_a = electron_1.app.getLoginItemSettings()) === null || _a === void 0 ? void 0 : _a.openAtLogin)) {
             this.setAutoLaunchSettings();
         }
         // Clear local-storage and quit if app was opened in hidden mode
-        if (electron_1.app.getLoginItemSettings().wasOpenedAsHidden) {
+        if (electron_1.app.getLoginItemSettings().wasOpenedAsHidden ||
+            electron_1.app.getLoginItemSettings().openAsHidden) {
             this.clearLocalStorageAndQuit();
         }
     }
     setAutoLaunchSettings() {
         electron_1.app.setLoginItemSettings({
             openAtLogin: true,
+            openAsHidden: true,
             path: this.appExe,
             args: [
                 '--processStart',
@@ -43,8 +45,10 @@ class AutoLaunch {
     }
     clearLocalStorageAndQuit() {
         return __awaiter(this, void 0, void 0, function* () {
-            yield localStorage.clear();
-            electron_1.app.quit();
+            if (this.winRef) {
+                this.winRef.webContents.executeJavaScript(`window.localStorage.clear();`);
+                electron_1.app.quit();
+            }
         });
     }
 }
