@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AutoUpdater = void 0;
 const electron_1 = require("electron");
-class AutoUpdater {
+class AppUpdater {
     constructor(serverUrl, updateInterval = 300000) {
         this.updateServerUrl = serverUrl;
         this.updateInterval = updateInterval;
@@ -34,10 +33,13 @@ class AutoUpdater {
             var _a, _b, _c, _d, _e, _f, _g, _h;
             const dialogOpts = {
                 type: 'info',
-                buttons: [(_b = (_a = this.messageBoxOptions) === null || _a === void 0 ? void 0 : _a.confirmButtonLabel) !== null && _b !== void 0 ? _b : 'Restart', (_d = (_c = this.messageBoxOptions) === null || _c === void 0 ? void 0 : _c.ignoreButtonLabel) !== null && _d !== void 0 ? _d : 'Later'],
+                buttons: [
+                    (_b = (_a = this.messageBoxOptions) === null || _a === void 0 ? void 0 : _a.confirmButtonLabel) !== null && _b !== void 0 ? _b : 'Restart',
+                    (_d = (_c = this.messageBoxOptions) === null || _c === void 0 ? void 0 : _c.ignoreButtonLabel) !== null && _d !== void 0 ? _d : 'Later',
+                ],
                 title: (_f = (_e = this.messageBoxOptions) === null || _e === void 0 ? void 0 : _e.title) !== null && _f !== void 0 ? _f : 'Application Update',
                 message: process.platform === 'win32' ? releaseNotes : releaseName,
-                detail: (_h = (_g = this.messageBoxOptions) === null || _g === void 0 ? void 0 : _g.details) !== null && _h !== void 0 ? _h : 'A new version has been downloaded. Restart the application to apply the updates.'
+                detail: (_h = (_g = this.messageBoxOptions) === null || _g === void 0 ? void 0 : _g.details) !== null && _h !== void 0 ? _h : 'A new version has been downloaded. Restart the application to apply the updates.',
             };
             electron_1.dialog.showMessageBox(dialogOpts).then((returnValue) => {
                 if (returnValue.response === 0)
@@ -46,5 +48,5 @@ class AutoUpdater {
         });
     }
 }
-exports.AutoUpdater = AutoUpdater;
-//# sourceMappingURL=auto-updater.js.map
+exports.default = AppUpdater;
+//# sourceMappingURL=app-updater.js.map

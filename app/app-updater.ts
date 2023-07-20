@@ -7,7 +7,7 @@ interface IMessageBoxOptions {
   details?: string;
 }
 
-export class AutoUpdater {
+export default class AppUpdater {
   private _updateServerUrl: string | undefined;
   private updateInterval: number | undefined;
 
@@ -29,12 +29,16 @@ export class AutoUpdater {
 
   set updateServerUrl(url: string | undefined) {
     this._updateServerUrl = url;
-    const feedUrl: string = `${url}/update/${process.platform}/${app.getVersion()}`;
+    const feedUrl: string = `${url}/update/${
+      process.platform
+    }/${app.getVersion()}`;
 
     autoUpdater.setFeedURL({ url: feedUrl });
   }
 
-  public setMessageBoxOptions(messageBoxOptions: Partial<IMessageBoxOptions>): void {
+  public setMessageBoxOptions(
+    messageBoxOptions: Partial<IMessageBoxOptions>
+  ): void {
     this.messageBoxOptions = messageBoxOptions;
   }
 
@@ -50,16 +54,20 @@ export class AutoUpdater {
     autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
       const dialogOpts: MessageBoxOptions = {
         type: 'info',
-        buttons: [this.messageBoxOptions?.confirmButtonLabel ?? 'Restart', this.messageBoxOptions?.ignoreButtonLabel ?? 'Later'],
+        buttons: [
+          this.messageBoxOptions?.confirmButtonLabel ?? 'Restart',
+          this.messageBoxOptions?.ignoreButtonLabel ?? 'Later',
+        ],
         title: this.messageBoxOptions?.title ?? 'Application Update',
         message: process.platform === 'win32' ? releaseNotes : releaseName,
         detail:
-          this.messageBoxOptions?.details ?? 'A new version has been downloaded. Restart the application to apply the updates.'
-      }
+          this.messageBoxOptions?.details ??
+          'A new version has been downloaded. Restart the application to apply the updates.',
+      };
 
       dialog.showMessageBox(dialogOpts).then((returnValue) => {
         if (returnValue.response === 0) autoUpdater.quitAndInstall();
-      })
-    })
+      });
+    });
   }
 }

@@ -1,14 +1,16 @@
 import { app, BrowserWindow, screen } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
-import { AutoUpdater } from './auto-updater';
+import AppUpdater from './app-updater';
+import AutoLaunch from './auto-launch';
+
+if (require('electron-squirrel-startup')) app.quit();
 
 let win: BrowserWindow | null = null;
 const args = process.argv.slice(1),
-  serve = args.some(val => val === '--serve');
+  serve = args.some((val) => val === '--serve');
 
 function createWindow(): BrowserWindow {
-
   const size = screen.getPrimaryDisplay().workAreaSize;
 
   // Create the browser window.
@@ -19,7 +21,7 @@ function createWindow(): BrowserWindow {
     height: size.height,
     webPreferences: {
       nodeIntegration: true,
-      allowRunningInsecureContent: (serve),
+      allowRunningInsecureContent: serve,
       contextIsolation: false,
     },
   });
@@ -59,7 +61,10 @@ try {
   // initialization and is ready to create browser windows.
   // Some APIs can only be used after this event occurs.
   // Added 400 ms to fix the black background issue while using transparent window. More detais at https://github.com/electron/electron/issues/15947
-  app.on('ready', () => setTimeout(createWindow, 400));
+  app.on('ready', () => {
+    setTimeout(createWindow, 400);
+    new AutoLaunch().init();
+  });
 
   // Quit when all windows are closed.
   app.on('window-all-closed', () => {
@@ -79,8 +84,7 @@ try {
   });
 
   // Auto updater config
-  new AutoUpdater('https://localhost:8080').init();
-
+  new AppUpdater('http://192.168.101.173:8080').init();
 } catch (e) {
   // Catch Error
   // throw e;
