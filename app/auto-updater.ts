@@ -18,6 +18,11 @@ export class AutoUpdater {
     this.updateInterval = updateInterval;
   }
 
+  init(): void {
+    this.checkForUpdates();
+    this.addUpdateDownloadedListener();
+  }
+
   get updateServerUrl(): string | undefined {
     return this._updateServerUrl;
   }
