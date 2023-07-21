@@ -9,6 +9,7 @@ class AppUpdater {
     init() {
         this.checkForUpdates();
         this.addUpdateDownloadedListener();
+        this.addUpdateErrorListener();
     }
     get updateServerUrl() {
         return this._updateServerUrl;
@@ -45,6 +46,12 @@ class AppUpdater {
                 if (returnValue.response === 0)
                     electron_1.autoUpdater.quitAndInstall();
             });
+        });
+    }
+    addUpdateErrorListener() {
+        electron_1.autoUpdater.on('error', (message) => {
+            console.error('There was a problem updating the application');
+            console.error(message);
         });
     }
 }

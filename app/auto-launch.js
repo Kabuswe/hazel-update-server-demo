@@ -17,21 +17,7 @@ class AutoLaunch {
         this.winRef = winRef;
         this.appFolder = path.dirname(process.execPath);
         this.appExe = path.resolve(this.appFolder, '..', `${electron_1.app.getName()}.exe`);
-    }
-    init() {
-        var _a;
-        // Set auto-launch settings if not set
-        if (!((_a = electron_1.app.getLoginItemSettings()) === null || _a === void 0 ? void 0 : _a.openAtLogin)) {
-            this.setAutoLaunchSettings();
-        }
-        // Clear local-storage and quit if app was opened in hidden mode
-        if (electron_1.app.getLoginItemSettings().wasOpenedAsHidden ||
-            electron_1.app.getLoginItemSettings().openAsHidden) {
-            this.clearLocalStorageAndQuit();
-        }
-    }
-    setAutoLaunchSettings() {
-        electron_1.app.setLoginItemSettings({
+        this.loginOptions = {
             openAtLogin: true,
             openAsHidden: true,
             path: this.appExe,
@@ -41,7 +27,31 @@ class AutoLaunch {
                 '--process-start-args',
                 '"--hidden"',
             ],
-        });
+        };
+    }
+    init() {
+        var _a, _b, _c;
+        // Set auto-launch settings if not set
+        if (!((_a = electron_1.app.getLoginItemSettings()) === null || _a === void 0 ? void 0 : _a.openAtLogin)) {
+            this.setAutoLaunchSettings();
+            return;
+        }
+        // Clear local-storage and quit if app was opened at login
+        if (this.loginOptions &&
+            (((_b = this.getAutoLaunchSettings()) === null || _b === void 0 ? void 0 : _b.executableWillLaunchAtLogin) ||
+                ((_c = this.getAutoLaunchSettings()) === null || _c === void 0 ? void 0 : _c.wasOpenedAtLogin))) {
+            this.clearLocalStorageAndQuit();
+        }
+    }
+    setAutoLaunchSettings() {
+        this.loginOptions && electron_1.app.setLoginItemSettings(this.loginOptions);
+    }
+    getAutoLaunchSettings() {
+        if (this.loginOptions) {
+            const { path, args } = this.loginOptions;
+            return electron_1.app.getLoginItemSettings({ path, args });
+        }
+        return null;
     }
     clearLocalStorageAndQuit() {
         return __awaiter(this, void 0, void 0, function* () {

@@ -21,6 +21,7 @@ export default class AppUpdater {
   init(): void {
     this.checkForUpdates();
     this.addUpdateDownloadedListener();
+    this.addUpdateErrorListener();
   }
 
   get updateServerUrl(): string | undefined {
@@ -68,6 +69,13 @@ export default class AppUpdater {
       dialog.showMessageBox(dialogOpts).then((returnValue) => {
         if (returnValue.response === 0) autoUpdater.quitAndInstall();
       });
+    });
+  }
+
+  public addUpdateErrorListener(): void {
+    autoUpdater.on('error', (message) => {
+      console.error('There was a problem updating the application');
+      console.error(message);
     });
   }
 }
