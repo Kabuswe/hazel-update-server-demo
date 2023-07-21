@@ -44,6 +44,7 @@ module.exports = {
       name: '@electron-forge/publisher-github',
       platforms: ['darwin', 'linux', 'win32'],
       config: {
+        draft: false,
         repository: {
           owner: 'Kabuswe',
           name: 'hazel-update-server-demo'
