@@ -65,6 +65,8 @@ try {
     setTimeout(() => {
       const winRef = createWindow();
       new AutoLaunch(winRef).init();
+      // Auto updater config
+      new AppUpdater('http://192.168.101.173:8080', 120000).init();
     }, 400);
   });
 
@@ -84,9 +86,6 @@ try {
       createWindow();
     }
   });
-
-  // Auto updater config
-  new AppUpdater('http://192.168.101.173:8080').init();
 } catch (e) {
   // Catch Error
   // throw e;

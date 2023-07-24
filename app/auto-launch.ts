@@ -1,5 +1,4 @@
 import { BrowserWindow, app } from 'electron';
-import { platform } from 'os';
 const path = require('path');
 
 export default class AutoLaunch {
@@ -27,7 +26,7 @@ export default class AutoLaunch {
     };
   }
 
-  async init(): Promise<void> {
+  init(): void {
     // Set auto-launch settings if not set
     if (!this.getAutoLaunchSettings()?.openAtLogin) {
       this.setAutoLaunchSettings();
