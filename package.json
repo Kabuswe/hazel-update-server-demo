@@ -45,11 +45,7 @@
     "lint": "ng lint",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "bump:major": "",
-    "bump:minor": "",
-    "bump:patch": "npx npm-bump patch && cd ./app && npx npm-bump patch && cd ..",
-    "publish:forge": "npx electron-forge publish --dry-run && npx electron-forge publish --from-dry-run",
-    "publish:builder": "electron-builder --win -p always"
+    "publish": "npx electron-forge publish --dry-run && npx electron-forge publish --from-dry-run"
   },
   "dependencies": {
     "@angular/common": "16.1.3",
@@ -62,7 +58,6 @@
     "@angular/router": "16.1.3",
     "electron-log": "4.4.8",
     "electron-squirrel-startup": "1.0.0",
-    "npm-bump": "0.0.33",
     "rxjs": "7.8.1",
     "tslib": "^2.5.0",
     "zone.js": "~0.13.1"
