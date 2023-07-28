@@ -4,14 +4,6 @@ module.exports = {
   },
   rebuildConfig: {},
   makers: [
-    /*{
-      name: '@electron-forge/maker-wix',
-      config: {
-        languageCode: 1033,
-        manufacturer: 'A-Electron',
-        shortcutFolderName: 'Angular Electron'
-      },
-    },*/
     {
       name: '@electron-forge/maker-squirrel',
       config: {
@@ -19,18 +11,6 @@ module.exports = {
         noDelta: false,
         fixUpPaths: true
       }
-    },
-    {
-      name: '@electron-forge/maker-zip',
-      platforms: ['darwin'],
-    },
-    {
-      name: '@electron-forge/maker-deb',
-      config: {},
-    },
-    {
-      name: '@electron-forge/maker-rpm',
-      config: {},
     },
   ],
   plugins: [
